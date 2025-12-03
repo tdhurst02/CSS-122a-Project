@@ -157,6 +157,39 @@ def insertAgentClient(uid:int, username:str, email:str, card_number:int, card_ho
     return
 
 
+def addCustomizedModel(mid:int, bmid:int):
+  #add customized model to table
+
+  #grab all the needed info
+  cursor = mydb.cursor()
+
+  #check if base model exists
+
+  query = """
+          SELECT * 
+          FROM BaseModel b
+          WHERE b.bmid = %s
+          """
+  cursor.execute(query, (bmid,))
+  results = cursor.fetchall()
+
+  if results:
+    #add customized model
+    query = """
+            INSERT IGNORE INTO CustomizedModel (bmid, mid)
+            VALUES (%s, %s)
+            """          
+    values = (bmid, mid)
+
+    cursor.execute(query, values)
+    mydb.commit()
+
+    return
+
+  else:
+    return False
+
+
 def deleteBaseModel(bmid:int):
     # delete base model from table
     uid = int(uid)
