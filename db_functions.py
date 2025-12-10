@@ -232,3 +232,15 @@ def listInternetService(bmid: int):
     except Exception:
         cursor.close()
         print("Fail")
+
+def keywordSearch(keyword: str):
+  
+  """
+  SELECT *
+  FROM BaseModel as b
+  INNER JOIN ModelServices as ms ON b.bmid = ms.bmid
+  INNER JOIN LLMService as l on ms.sid = l.sid
+  WHERE l.domain LIKE '%video%' 
+  ORDER BY b.bmid ASC 
+  LIMIT 5
+  """
