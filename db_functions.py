@@ -234,13 +234,24 @@ def listInternetService(bmid: int):
         print("Fail")
 
 def keywordSearch(keyword: str):
-  
-  """
-  SELECT *
-  FROM BaseModel as b
-  INNER JOIN ModelServices as ms ON b.bmid = ms.bmid
-  INNER JOIN LLMService as l on ms.sid = l.sid
-  WHERE l.domain LIKE '%video%' 
-  ORDER BY b.bmid ASC 
-  LIMIT 5
-  """
+    cursor = mydb.cursor
+    query = """
+            SELECT *
+            FROM BaseModel as b
+            INNER JOIN ModelServices as ms ON b.bmid = ms.bmid
+            INNER JOIN LLMService as l ON ms.sid = l.sid
+            WHERE l.domain LIKE %s
+            ORDER BY b.bmid ASC
+            LIMIT 5
+            """
+          
+    # Format keyword with wildcards for LIKE clause
+    search_pattern = f"%{keyword}%"
+    
+    cursor.execute(query, (search_pattern,))
+    results = cursor.fetchall()
+    
+    for row in results:
+        print(",".join(str(x) for x in row))
+    
+    cursor.close()
